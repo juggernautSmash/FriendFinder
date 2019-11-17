@@ -1,7 +1,7 @@
 module.exports = [
   {
     id: 1, 
-    question: "Traveling outside of your home state/country is awesome!."
+    question: "Traveling outside of your home state/country is awesome."
   },
   {
     id: 2, 

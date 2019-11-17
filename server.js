@@ -8,4 +8,4 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.listen(3000)
 
-require('./routes')(app)
+require('./app/routes')(app)

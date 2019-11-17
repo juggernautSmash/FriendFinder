@@ -5,10 +5,15 @@ module.exports = app => {
   app.get(`/api/friends`, (rq, rs) => {
     rs.json(friends)
   })
+
+  // A GET route for getting the questions
+  app.get(`/api/questions`, (rq, rs) => {
+    rs.json(questions)
+  })
   
   // A POST routes `/api/friends`. This will be used to handle incoming survey results. This route will also be used to handle the compatibility logic.
   app.post(`/api/friends`, (rq, rs) => {
-    
+    console.log(rq.body)
   })
 
 }
