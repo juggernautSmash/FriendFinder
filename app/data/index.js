@@ -1,4 +1,4 @@
 module.exports = {
-  friends: require('./friends.js'),
-  questions: require('./questions')
+  Friends: require('./friends.js'),
+  Questions: require('./questions')
 }

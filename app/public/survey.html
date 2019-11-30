@@ -25,10 +25,36 @@
       <a class="btn btn-primary" href="./home.html" role="button">Go to Home</a>
       <hr class="my-4">
       <div id="questions"></div>
-      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" data-toggle="modal" data-target="#friend-match-modal" >Submit</button>
       <hr class="my-4">
     </div>
   </div>
+
+  <!-- The Modal -->
+<div class="modal" id="friend-match-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Your Friend Match is...</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p>Name: <span id='matchName'></span></p>
+        <p id='matchImg'></p>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -77,20 +103,28 @@
           name: document.getElementById('name').value,
           photo: document.getElementById('pImg').value,
           scores: [
-          parseInt(document.question1.elements['options1'].value),
-          parseInt(document.question2.elements['options2'].value),
-          parseInt(document.question3.elements['options3'].value),
-          parseInt(document.question4.elements['options4'].value),
-          parseInt(document.question5.elements['options5'].value),
-          parseInt(document.question6.elements['options6'].value),
-          parseInt(document.question7.elements['options7'].value),
-          parseInt(document.question8.elements['options8'].value),
-          parseInt(document.question9.elements['options9'].value),
-          parseInt(document.question10.elements['options10'].value)
+          document.question1.elements['options1'].value,
+          document.question2.elements['options2'].value,
+          document.question3.elements['options3'].value,
+          document.question4.elements['options4'].value,
+          document.question5.elements['options5'].value,
+          document.question6.elements['options6'].value,
+          document.question7.elements['options7'].value,
+          document.question8.elements['options8'].value,
+          document.question9.elements['options9'].value,
+          document.question10.elements['options10'].value
           ]
         }
-        //console.log(user)
-        axios.post('/api/friends')
+        console.log(user)
+        axios.post('/api/friends', user)
+          .then( ({ data }) => {
+            document.getElementById('matchName').textContent = data.name
+            document.getElementById('matchImg').innerHTML = `
+              <img src="${data.photo}"> 
+            `
+            console.log(`after post reqeust response is`)
+            console.log(data)
+        })
       })
 
   </script>
