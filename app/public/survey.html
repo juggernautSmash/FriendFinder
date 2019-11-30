@@ -25,7 +25,7 @@
       <a class="btn btn-primary" href="./home.html" role="button">Go to Home</a>
       <hr class="my-4">
       <div id="questions"></div>
-      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" data-toggle="modal" data-target="#friend-match-modal" >Submit</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
       <hr class="my-4">
     </div>
   </div>
@@ -60,45 +60,71 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!-- Sweet Alert -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Axios -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     axios.get('/api/questions')
-      .then( ({data}) => {
-        document.getElementById('questions').innerHTML = ''
-        data.forEach( ({id, question}) => {
-          // Generate question
-          let qe = document.createElement('div')
-          qe.innerHTML = `
+    .then( ({data}) => {
+      document.getElementById('questions').innerHTML = ''
+      data.forEach( ({id, question}) => {
+        // Generate question
+        let qe = document.createElement('div')
+        qe.innerHTML = `
           <h3><strong>Question ${id}</strong></h3>
           <h4>${question}</h4>
           <p>Strongly Disagree
             <span id="options${id}"></span>
             Strongly Agree
           </p>
-          `
-          // Generate options
-          let opEl = document.createElement('form')
-          opEl.className = 'form-check form-check-inline'
-          for(let i=1; i<6; i++){
-            opEl.name = `question${id}`
-            opEl.innerHTML += `
-              <div>
-                <label>
-                  <input class='form-check-input' type='radio' name='options${id}' value='${i}'/>
-                  <span>${i}</span>
-                </label>
-              </div>
-              `
-          }
+        `
+        // Generate options
+        let opEl = document.createElement('form')
+        opEl.className = 'form-check form-check-inline'
+        for(let i=1; i<6; i++){
+          opEl.name = `question${id}`
+          opEl.innerHTML += `
+            <div>
+              <label>
+                <input class='form-check-input' type='radio' name='options${id}' value='${i}'/>
+                <span>${i}</span>
+              </label>
+            </div>
+            `
+        }
+        document.getElementById('questions').append(qe)
+        document.getElementById(`options${id}`).append(opEl)
+      }) // end forEach
+    }) //end axios get .then
 
-          document.getElementById('questions').append(qe)
-          document.getElementById(`options${id}`).append(opEl)
-        })
-      })
-
-      document.getElementById('submit').addEventListener('click', e => {
-        e.preventDefault()
+    document.getElementById('submit').addEventListener('click', e => {
+      e.preventDefault()
+      if( document.getElementById('name').value === '' ){
+          swal({
+            title: 'Please enter your name',
+            icon: 'error'
+          })
+      } else if( document.getElementById('pImg').value === '' ) {
+          swal({
+            title: 'Please enter an image URL of your photo',
+            icon: 'error'
+          })
+      } else if (document.question1.elements['options1'].value === '' || 
+        document.question2.elements['options2'].value === '' ||
+        document.question3.elements['options3'].value === '' ||
+        document.question4.elements['options4'].value === '' ||
+        document.question5.elements['options5'].value === '' ||
+        document.question6.elements['options6'].value === '' ||
+        document.question7.elements['options7'].value === '' ||
+        document.question8.elements['options8'].value === '' ||
+        document.question9.elements['options9'].value === '' ||
+        document.question10.elements['options10'].value  === '' ) {
+          swal({
+          title: 'Please answer all survey questions',
+          icon: 'error'
+          })
+      } else {
         let user = {
           name: document.getElementById('name').value,
           photo: document.getElementById('pImg').value,
@@ -114,19 +140,19 @@
           document.question9.elements['options9'].value,
           document.question10.elements['options10'].value
           ]
-        }
-        console.log(user)
+        } // end user
         axios.post('/api/friends', user)
           .then( ({ data }) => {
             document.getElementById('matchName').textContent = data.name
             document.getElementById('matchImg').innerHTML = `
-              <img src="${data.photo}"> 
+              <img src="${data.photo}" alt="image not available"> 
             `
-            console.log(`after post reqeust response is`)
-            console.log(data)
-        })
-      })
+          }) // end axios post .then
 
+        //document.getElementById('friend-match-modal').modal('toggle')
+        $('#friend-match-modal').modal('toggle')
+       } // end else 
+    }) // end submit listener
   </script>
 </body>
 </html>
